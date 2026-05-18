@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AiFillerPro — AI-powered form autofill for professionals. Built for complex, dynamic forms that standard tools can't handle." />
+  <meta property="og:title" content="AiFillerPro — Coming Soon" />
+  <meta property="og:description" content="The autofill tool Chrome gave up on. We didn't." />
+  <meta property="og:url" content="https://aifiller.pro" />
+  <title>AiFillerPro — Coming Soon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #121212;
+      --bg-deep:   #0d0d0d;
+      --bg-card:   #181818;
+      --border:    #1e1e1e;
+      --border-md: #2a2a2a;
+      --text:      #e0e0e0;
+      --muted:     #888;
+      --dim:       #444;
+      --ghost:     #2a2a2a;
+      --cyan:      #00F5FF;
+      --lime:      #CCFF00;
+      --font:      'Share Tech Mono', monospace;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── SCANLINE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.04) 2px,
+        rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-deep);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      display: grid;
+      grid-template-columns: repeat(4, 7px);
+      grid-template-rows: repeat(4, 7px);
+      gap: 1px;
+    }
+
+    .px { width: 7px; height: 7px; }
+    .px-c { background: var(--cyan); }
+    .px-l { background: var(--lime); }
+    .px-d { background: #1e1e1e; }
+
+    .logo-text {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .logo-text .c { color: var(--cyan); }
+    .logo-text .l { color: var(--lime); }
+
+    .topbar-right {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 24px 56px;
+      text-align: center;
+      position: relative;
+    }
+
+    /* corner brackets */
+    main::before, main::after,
+    .corner-b::before, .corner-b::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+    }
+    main::before  { top: 20px; left: 20px;  border-top: 1px solid var(--border-md); border-left: 1px solid var(--border-md); }
+    main::after   { top: 20px; right: 20px; border-top: 1px solid var(--border-md); border-right: 1px solid var(--border-md); }
+    .corner-b::before { bottom: 20px; left: 20px;  border-bottom: 1px solid var(--border-md); border-left: 1px solid var(--border-md); }
+    .corner-b::after  { bottom: 20px; right: 20px; border-bottom: 1px solid var(--border-md); border-right: 1px solid var(--border-md); }
+
+    /* ── EYEBROW ── */
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--lime);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+    .eyebrow::before, .eyebrow::after {
+      content: '';
+      width: 36px;
+      height: 1px;
+      background: rgba(204,255,0,0.25);
+    }
+
+    /* ── HEADLINE ── */
+    h1 {
+      font-size: clamp(26px, 5vw, 40px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+    h1 .c { color: var(--cyan); }
+    h1 .l { color: var(--lime); }
+
+    /* ── SUBLINE ── */
+    .subline {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 380px;
+      margin: 0 auto 36px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.3s;
+    }
+
+    /* ── PIXEL DIVIDER ── */
+    .pixel-row {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.35s;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 1px;
+    }
+
+    /* ── TEASERS ── */
+    .teasers {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.4s;
+    }
+    .teaser {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--dim);
+      background: var(--bg-card);
+      white-space: nowrap;
+    }
+    .redact {
+      display: inline-block;
+      background: var(--ghost);
+      color: transparent;
+      border-radius: 1px;
+      user-select: none;
+      letter-spacing: 0;
+      vertical-align: middle;
+    }
+
+    /* ── FORM ── */
+    .form-wrap {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.5s;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0;
+      width: 100%;
+    }
+
+    input[type="email"] {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-md);
+      border-right: none;
+      color: var(--text);
+      padding: 12px 16px;
+      font-family: var(--font);
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      border-radius: 2px 0 0 2px;
+      outline: none;
+      transition: border-color 0.2s;
+      min-width: 0;
+    }
+    input[type="email"]:focus {
+      border-color: rgba(0,245,255,0.3);
+    }
+    input[type="email"]::placeholder {
+      color: var(--dim);
+    }
+
+    button[type="submit"] {
+      background: var(--cyan);
+      color: var(--bg-deep);
+      border: none;
+      padding: 12px 20px;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 0 2px 2px 0;
+      white-space: nowrap;
+      transition: background 0.15s, opacity 0.15s;
+      flex-shrink: 0;
+    }
+    button[type="submit"]:hover { background: #00dde6; }
+    button[type="submit"]:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .form-note {
+      font-size: 10px;
+      color: #333;
+      letter-spacing: 1px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    /* ── MESSAGES ── */
+    .msg {
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-top: 14px;
+      padding: 10px 16px;
+      border-radius: 2px;
+      display: none;
+      text-align: left;
+    }
+    .msg.success {
+      border: 1px solid rgba(204,255,0,0.2);
+      background: rgba(204,255,0,0.05);
+      color: var(--lime);
+    }
+    .msg.error {
+      border: 1px solid rgba(255,80,80,0.2);
+      background: rgba(255,80,80,0.05);
+      color: #ff6b6b;
+    }
+    .msg.visible { display: block; }
+
+    /* ── FOOTER ── */
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 32px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-deep);
+    }
+    .footer-left {
+      font-size: 10px;
+      color: #2e2e2e;
+      letter-spacing: 1px;
+    }
+    .footer-right {
+      font-size: 10px;
+      color: #2e2e2e;
+      letter-spacing: 1px;
+    }
+
+    /* ── BLINK ── */
+    .blink { animation: blink 1.2s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .topbar { padding: 14px 16px; }
+      main { padding: 48px 16px 40px; }
+      footer { padding: 14px 16px; }
+      .teasers { gap: 6px; }
+      .teaser { font-size: 9px; padding: 5px 10px; }
+      button[type="submit"] { padding: 12px 14px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <a class="logo" href="/">
+      <div class="logo-mark" aria-hidden="true">
+        <div class="px px-c"></div><div class="px px-d"></div><div class="px px-c"></div><div class="px px-d"></div>
+        <div class="px px-d"></div><div class="px px-c"></div><div class="px px-d"></div><div class="px px-c"></div>
+        <div class="px px-l"></div><div class="px px-d"></div><div class="px px-l"></div><div class="px px-d"></div>
+        <div class="px px-d"></div><div class="px px-l"></div><div class="px px-d"></div><div class="px px-l"></div>
+      </div>
+      <span class="logo-text"><span class="c">AiFiller</span><span class="l">Pro</span></span>
+    </a>
+    <span class="topbar-right">aifiller.pro</span>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="corner-b" aria-hidden="true"></div>
+
+    <p class="eyebrow">Something is being built</p>
+
+    <h1>
+      The autofill tool<br>
+      <span class="c">Chrome gave up on.</span><br>
+      <span class="l">We didn't.</span>
+    </h1>
+
+    <p class="subline">
+      AI-powered. Privacy-first.<br>
+      Built for professionals who deal with forms<br>
+      that break everything else.
+    </p>
+
+    <div class="pixel-row" aria-hidden="true">
+      <div class="dot" style="background:var(--cyan)"></div>
+      <div class="dot" style="background:var(--border)"></div>
+      <div class="dot" style="background:var(--lime)"></div>
+      <div class="dot" style="background:var(--border)"></div>
+      <div class="dot" style="background:var(--cyan)"></div>
+      <div class="dot" style="background:var(--border)"></div>
+      <div class="dot" style="background:var(--lime)"></div>
+      <div class="dot" style="background:var(--border)"></div>
+      <div class="dot" style="background:var(--cyan)"></div>
+    </div>
+
+    <div class="teasers" aria-label="Feature hints">
+      <div class="teaser">&#9632; AI semantic mapping</div>
+      <div class="teaser">&#9632; <span class="redact">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span> encryption</div>
+      <div class="teaser">&#9632; MV3 compliant</div>
+      <div class="teaser">&#9632; <span class="redact">&#9608;&#9608;&#9608;&#9608;&#9608;</span> inference</div>
+    </div>
+
+    <!-- WAITLIST FORM -->
+    <div class="form-wrap">
+      <form id="waitlist-form" novalidate>
+        <div class="input-row">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+            aria-label="Email address"
+            data-fs-field
+          />
+          <button type="submit" data-fs-submit-btn>
+            Notify me &#9658;
+          </button>
+        </div>
+        <p class="form-note">&#9632; Be the first to know when AiFillerPro launches &nbsp;&bull;&nbsp; No spam, ever</p>
+        <div class="msg success" id="msg-success" role="status">
+          &#9632; You're on the list. We'll be in touch when it's ready.
+        </div>
+        <div class="msg error" id="msg-error" role="alert">
+          &#9632; Something went wrong. Please try again or email us directly.
+        </div>
+      </form>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-left">Sydney, AU &nbsp;&#9632;&nbsp; &copy; 2025 AiFillerPro</span>
+    <span class="footer-right">Built different<span class="blink">_</span></span>
+  </footer>
+
+  <!-- FORMSPREE AJAX -->
+  <script>
+    window.formspree = window.formspree || function () {
+      (formspree.q = formspree.q || []).push(arguments);
+    };
+    formspree('initForm', {
+      formElement: '#waitlist-form',
+      formId: 'xpqnzogn'
+    });
+
+    const form    = document.getElementById('waitlist-form');
+    const success = document.getElementById('msg-success');
+    const error   = document.getElementById('msg-error');
+
+    form.addEventListener('formspree:success', function () {
+      success.classList.add('visible');
+      error.classList.remove('visible');
+      form.querySelector('input[type="email"]').value = '';
+    });
+
+    form.addEventListener('formspree:error', function () {
+      error.classList.add('visible');
+      success.classList.remove('visible');
+    });
+  </script>
+  <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+
+</body>
+</html>
